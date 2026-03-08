@@ -2,14 +2,14 @@ import React from 'react';
 import { Phone, Users, Shield, Ambulance } from 'lucide-react';
 
 const ContactCard = ({ name, role, phone, icon: Icon, colorClass }) => (
-  <div className={`bg-white p-6 rounded-lg shadow-md border-t-4 ${colorClass} flex items-center space-x-4`}>
+  <div className={`bg-slate-800 p-6 rounded-lg shadow-md border-t-4 ${colorClass} flex items-center space-x-4`}>
     <div className={`p-3 rounded-full ${colorClass.replace('border-', 'bg-').replace('500', '100')} text-${colorClass.replace('border-', '').replace('500', '600')}`}>
       <Icon className="w-8 h-8" />
     </div>
     <div>
-      <h3 className="text-xl font-bold text-gray-800">{name}</h3>
-      <p className="text-sm font-medium text-gray-500">{role}</p>
-      <p className="text-lg font-bold text-gray-900 mt-1">{phone}</p>
+      <h3 className="text-xl font-bold text-slate-100">{name}</h3>
+      <p className="text-sm font-medium text-slate-400">{role}</p>
+      <p className="text-lg font-bold text-white mt-1">{phone}</p>
     </div>
   </div>
 );
@@ -27,8 +27,8 @@ const ContactsDashboard = () => {
   return (
     <div className="max-w-6xl mx-auto space-y-6">
       <div>
-        <h2 className="text-3xl font-bold text-gray-900">Important Contacts</h2>
-        <p className="text-gray-500 mt-2">Key personnel and helplines for disaster management and rescue operations.</p>
+        <h2 className="text-3xl font-bold text-white">Important Contacts</h2>
+        <p className="text-slate-400 mt-2">Key personnel and helplines for disaster management and rescue operations.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

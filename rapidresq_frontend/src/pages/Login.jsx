@@ -23,35 +23,35 @@ const Login = () => {
 
   return (
     <div className="flex justify-center items-center h-full">
-      <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 max-w-md w-full">
+      <div className="bg-slate-800 p-8 rounded-2xl shadow-lg border border-slate-700 max-w-md w-full">
         <div className="flex justify-center mb-6">
           <div className="bg-slate-900 p-3 rounded-full">
             <ShieldAlert className="w-8 h-8 text-blue-400" />
           </div>
         </div>
-        <h2 className="text-2xl font-bold text-center text-gray-900 mb-6">Welcome Back</h2>
+        <h2 className="text-2xl font-bold text-center text-white mb-6">Welcome Back</h2>
         
-        {error && <div className="bg-red-50 text-red-600 p-3 rounded mb-4 text-sm font-medium">{error}</div>}
+        {error && <div className="bg-red-900/30 text-red-600 p-3 rounded mb-4 text-sm font-medium">{error}</div>}
         
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Username</label>
+            <label className="block text-sm font-medium text-slate-300 mb-1">Username</label>
             <input 
               type="text" 
               required
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-slate-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <label className="block text-sm font-medium text-slate-300 mb-1">Password</label>
             <input 
               type="password" 
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-slate-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <button 
@@ -62,7 +62,7 @@ const Login = () => {
           </button>
         </form>
         
-        <p className="mt-6 text-center text-gray-600 text-sm">
+        <p className="mt-6 text-center text-slate-400 text-sm">
           Don't have an account? <Link to="/register" className="text-blue-600 hover:underline font-medium">Register here</Link>
         </p>
       </div>

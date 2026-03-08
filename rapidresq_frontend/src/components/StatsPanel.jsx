@@ -2,10 +2,10 @@ import React from 'react';
 import { AlertCircle, Phone, Radio, Users } from 'lucide-react';
 
 const StatsCard = ({ title, count, icon, colorClass }) => (
-  <div className={`bg-white p-4 rounded-lg shadow flex items-center justify-between border-l-4 ${colorClass}`}>
+  <div className={`bg-slate-800 p-4 rounded-lg shadow flex items-center justify-between border-l-4 ${colorClass}`}>
     <div>
-      <p className="text-gray-500 text-sm font-medium">{title}</p>
-      <p className="text-2xl font-bold text-gray-800">{count}</p>
+      <p className="text-slate-400 text-sm font-medium">{title}</p>
+      <p className="text-2xl font-bold text-slate-100">{count}</p>
     </div>
     {icon}
   </div>
@@ -32,8 +32,8 @@ const StatsPanel = ({ data }) => {
       <StatsCard title="Available Volunteers" count={volunteers} icon={<Users className="text-blue-500 w-8 h-8" />} colorClass="border-blue-500" />
       <StatsCard title="Total Shelter Cap" count={maxCapacity} icon={<Radio className="text-green-500 w-8 h-8" />} colorClass="border-green-500" />
       
-      <div className="bg-white p-4 rounded-lg shadow flex flex-col justify-center items-center col-span-2 md:col-span-1 border border-gray-200">
-        <p className="text-gray-500 text-sm font-medium mb-1">Overall Risk Level</p>
+      <div className="bg-slate-800 p-4 rounded-lg shadow flex flex-col justify-center items-center col-span-2 md:col-span-1 border border-slate-700">
+        <p className="text-slate-400 text-sm font-medium mb-1">Overall Risk Level</p>
         <div className={`text-white px-4 py-1 rounded-full font-bold text-sm shadow-inner tracking-wider ${riskColor}`}>
           {riskLevel}
         </div>

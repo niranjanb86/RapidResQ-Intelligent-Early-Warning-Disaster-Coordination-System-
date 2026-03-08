@@ -6,8 +6,8 @@ const guides = [
     icon: Droplets,
     title: 'Flood Precautions & First Aid',
     color: 'text-blue-500',
-    bg: 'bg-blue-50',
-    border: 'border-blue-200',
+    bg: 'bg-blue-900/30',
+    border: 'border-blue-700',
     content: [
       'Avoid walking or driving through flood waters (6 inches of moving water can knock you down).',
       'Wash thoroughly if brought into contact with floodwater, which may carry diseases or chemicals.',
@@ -18,9 +18,9 @@ const guides = [
   {
     icon: Wind,
     title: 'Cyclone & Hurricane Guidelines',
-    color: 'text-gray-600',
-    bg: 'bg-gray-50',
-    border: 'border-gray-200',
+    color: 'text-slate-400',
+    bg: 'bg-slate-900',
+    border: 'border-slate-700',
     content: [
       'Stay indoors and away from windows and glass doors.',
       'Turn off main power switches if water enters your home.',
@@ -32,8 +32,8 @@ const guides = [
     icon: Flame,
     title: 'Fire Emergency & Burns',
     color: 'text-orange-500',
-    bg: 'bg-orange-50',
-    border: 'border-orange-200',
+    bg: 'bg-orange-900/30',
+    border: 'border-orange-700',
     content: [
       'Get out quickly. Do not stop to collect belongings.',
       'Stay low to the ground to avoid inhaling smoke.',
@@ -45,8 +45,8 @@ const guides = [
     icon: HeartPulse,
     title: 'General First Aid (CPR & Bleeding)',
     color: 'text-red-500',
-    bg: 'bg-red-50',
-    border: 'border-red-200',
+    bg: 'bg-red-900/30',
+    border: 'border-red-700',
     content: [
       'CPR: Push hard and fast in the center of the chest (100-120 pushes a minute) if the person is unresponsive and not breathing.',
       'Bleeding: Apply firm, direct pressure over the wound with a clean cloth until bleeding stops.',
@@ -62,8 +62,8 @@ const FirstAidDashboard = () => {
       <div className="flex items-center space-x-3 mb-8">
         <AlertCircle className="w-10 h-10 text-red-600" />
         <div>
-          <h2 className="text-3xl font-bold text-gray-900">First Aid & Precautions</h2>
-          <p className="text-gray-500 mt-1">Essential life-saving tips and disaster preparedness guidelines.</p>
+          <h2 className="text-3xl font-bold text-white">First Aid & Precautions</h2>
+          <p className="text-slate-400 mt-1">Essential life-saving tips and disaster preparedness guidelines.</p>
         </div>
       </div>
 
@@ -74,11 +74,11 @@ const FirstAidDashboard = () => {
             <div key={idx} className={`border ${guide.border} ${guide.bg} rounded-xl p-6 shadow-sm hover:shadow-md transition`}>
               <div className="flex items-center space-x-3 mb-4">
                 <Icon className={`w-8 h-8 ${guide.color}`} />
-                <h3 className="text-xl font-bold text-gray-800">{guide.title}</h3>
+                <h3 className="text-xl font-bold text-slate-100">{guide.title}</h3>
               </div>
               <ul className="space-y-3">
                 {guide.content.map((point, i) => (
-                  <li key={i} className="flex items-start text-gray-700">
+                  <li key={i} className="flex items-start text-slate-300">
                     <span className="text-xl mr-2 leading-none">•</span>
                     <span>{point}</span>
                   </li>

@@ -60,7 +60,7 @@ const ChatBot = () => {
     <div className="fixed bottom-6 right-6 z-[9999]">
       {/* Chat Window */}
       {isOpen && (
-        <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 w-80 sm:w-96 mb-4 flex flex-col overflow-hidden transition-all duration-300 transform origin-bottom-right">
+        <div className="bg-slate-800 rounded-2xl shadow-2xl border border-slate-700 w-80 sm:w-96 mb-4 flex flex-col overflow-hidden transition-all duration-300 transform origin-bottom-right">
           {/* Header */}
           <div className="bg-slate-900 text-white p-4 flex justify-between items-center">
             <div className="flex items-center space-x-2">
@@ -76,14 +76,14 @@ const ChatBot = () => {
           </div>
 
           {/* Messages Area */}
-          <div className="flex-1 p-4 h-80 overflow-y-auto bg-gray-50 flex flex-col space-y-3">
+          <div className="flex-1 p-4 h-80 overflow-y-auto bg-slate-900 flex flex-col space-y-3">
             {messages.map((msg, idx) => (
               <div key={idx} className={`flex ${msg.isBot ? 'justify-start' : 'justify-end'}`}>
-                {msg.isBot && <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center mr-2 flex-shrink-0"><Bot className="w-4 h-4 text-slate-700" /></div>}
+                {msg.isBot && <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center mr-2 flex-shrink-0"><Bot className="w-4 h-4 text-slate-400" /></div>}
                 <div 
                   className={`max-w-[75%] p-3 rounded-2xl text-sm shadow-sm ${
                     msg.isBot 
-                      ? 'bg-white text-gray-800 border border-gray-100 rounded-tl-sm' 
+                      ? 'bg-slate-800 text-slate-100 border border-slate-700 rounded-tl-sm' 
                       : 'bg-blue-600 text-white rounded-tr-sm'
                   }`}
                 >
@@ -95,14 +95,14 @@ const ChatBot = () => {
           </div>
 
           {/* Input Area */}
-          <div className="p-3 bg-white border-t border-gray-100">
+          <div className="p-3 bg-slate-800 border-t border-slate-700">
             <form onSubmit={handleSend} className="flex relative">
               <input 
                 type="text" 
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Ask about emergencies or first aid..." 
-                className="w-full bg-gray-100 text-gray-800 rounded-full pl-4 pr-12 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full bg-slate-700 text-slate-100 rounded-full pl-4 pr-12 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <button 
                 type="submit"

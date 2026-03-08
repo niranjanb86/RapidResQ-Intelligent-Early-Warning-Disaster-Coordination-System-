@@ -110,7 +110,7 @@ const MapComponent = ({ data, routeConfig }) => {
 
   return (
     <MapContainer center={kochiLoc} zoom={12} style={{ height: '100%', width: '100%', minHeight: '500px' }}>
-      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution="&copy; OpenStreetMap contributors" />
+      <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" attribution="&copy; <a href='https://carto.com/'>CARTO</a>" />
       
       {data.alerts.map(a => {
         const coords = parseLoc(a.location);

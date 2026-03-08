@@ -37,7 +37,7 @@ function App() {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen flex flex-col bg-slate-900">
       <AlertBanner alerts={activeAlerts} />
       
       <div className="flex flex-1 overflow-hidden">
@@ -102,7 +102,7 @@ function App() {
         </nav>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto bg-gray-50 p-6">
+        <main className="flex-1 overflow-y-auto bg-slate-900 p-6">
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
