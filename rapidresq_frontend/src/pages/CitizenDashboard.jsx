@@ -1,12 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import api from '../services/api';
+import { AuthContext } from '../context/AuthContext';
 
 const CitizenDashboard = () => {
+  const { user } = useContext(AuthContext);
+  
   const [formData, setFormData] = useState({
     name: '', phone: '', address: '', location: '', incident_type: 'Flooded road', description: ''
   });
   
   const [status, setStatus] = useState(null);
+
+  useEffect(() => {
+    if (user) {
+      setFormData(prev => ({
+        ...prev,
+        name: user.first_name || user.username || '',
+        phone: user.profile?.phone || '',
+        location: user.profile?.location || prev.location
+      }));
+    }
+  }, [user]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -38,6 +52,11 @@ const CitizenDashboard = () => {
       
       {status === 'success' && <div className="mb-4 p-4 bg-green-100 text-green-700 rounded-md">Report submitted successfully. Help is on the way.</div>}
       {status === 'error' && <div className="mb-4 p-4 bg-red-100 text-red-700 rounded-md">Failed to submit report. Try again.</div>}
+      {!user && (
+        <div className="mb-4 p-3 bg-blue-50 text-blue-700 border border-blue-200 rounded-md text-sm">
+          💡 Suggestion: Log in to automatically fill your contact details for faster reporting.
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-2 gap-4">

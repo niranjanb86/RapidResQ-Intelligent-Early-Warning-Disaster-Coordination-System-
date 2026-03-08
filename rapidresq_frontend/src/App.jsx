@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
 import CitizenDashboard from './pages/CitizenDashboard';
@@ -7,13 +7,17 @@ import LiveDashboard from './pages/LiveDashboard';
 import ContactsDashboard from './pages/ContactsDashboard';
 import FirstAidDashboard from './pages/FirstAidDashboard';
 import DonationDashboard from './pages/DonationDashboard';
+import Login from './pages/Login';
+import Register from './pages/Register';
 import AlertBanner from './components/AlertBanner';
 import ChatBot from './components/ChatBot';
-import { ShieldAlert, Users, Radio, Map as MapIcon, Phone, FileHeart, HeartHandshake } from 'lucide-react';
+import { ShieldAlert, Users, Radio, Map as MapIcon, Phone, FileHeart, HeartHandshake, LogIn, LogOut, User as UserIcon } from 'lucide-react';
+import { AuthContext } from './context/AuthContext';
 import api from './services/api';
 
 function App() {
   const [activeAlerts, setActiveAlerts] = useState([]);
+  const { user, logout } = useContext(AuthContext);
 
   useEffect(() => {
     // Poll for active alerts every 10 seconds
@@ -65,11 +69,38 @@ function App() {
               <HeartHandshake className="w-5 h-5 mr-3 group-hover:text-pink-400" /> Donate Funds
             </Link>
           </div>
+          
+          {/* User Auth Section built into Sidebar Bottom */}
+          <div className="p-4 border-t border-slate-800">
+            {user ? (
+              <div className="flex flex-col space-y-3">
+                <div className="flex items-center text-sm font-medium">
+                  <UserIcon className={`w-8 h-8 p-1.5 rounded-full mr-3 ${user.role === 'volunteer' ? 'bg-green-500/20 text-green-400' : 'bg-blue-500/20 text-blue-400'}`} />
+                  <div>
+                    <div className="text-white capitalize">{user.first_name || user.username}</div>
+                    <div className="text-xs text-slate-400 capitalize">{user.role}</div>
+                  </div>
+                </div>
+                <button 
+                  onClick={logout}
+                  className="flex items-center justify-center w-full px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded transition"
+                >
+                  <LogOut className="w-4 h-4 mr-2" /> Logout
+                </button>
+              </div>
+            ) : (
+              <Link to="/login" className="flex items-center justify-center w-full px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition">
+                <LogIn className="w-5 h-5 mr-2" /> Login / Register
+              </Link>
+            )}
+          </div>
         </nav>
 
         {/* Main Content */}
         <main className="flex-1 overflow-y-auto bg-gray-50 p-6">
           <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
             <Route path="/" element={<LandingPage />} />
             <Route path="/citizen" element={<CitizenDashboard />} />
             <Route path="/rescue" element={<RescueDashboard />} />
