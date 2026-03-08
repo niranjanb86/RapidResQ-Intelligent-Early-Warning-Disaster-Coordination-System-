@@ -12,6 +12,7 @@ import Register from './pages/Register';
 import AlertBanner from './components/AlertBanner';
 import ChatBot from './components/ChatBot';
 import EmergencySOSButton from './components/EmergencySOSButton';
+import PredictionsDashboard from './pages/PredictionsDashboard';
 import { ShieldAlert, Users, Radio, Map as MapIcon, Phone, FileHeart, HeartHandshake, LogIn, LogOut, User as UserIcon } from 'lucide-react';
 import { AuthContext } from './context/AuthContext';
 import api from './services/api';
@@ -58,6 +59,9 @@ function App() {
             </Link>
             <Link to="/live" className="flex items-center px-6 py-3 hover:bg-slate-800 hover:text-white transition group">
               <MapIcon className="w-5 h-5 mr-3 group-hover:text-yellow-400" /> Live Map
+            </Link>
+            <Link to="/predictions" className="flex items-center px-6 py-3 hover:bg-slate-800 hover:text-white transition group">
+              <MapIcon className="w-5 h-5 mr-3 group-hover:text-purple-400" /> AI Predictions
             </Link>
             <div className="border-t border-slate-800 my-2"></div>
             <Link to="/contacts" className="flex items-center px-6 py-3 hover:bg-slate-800 hover:text-white transition group">
@@ -106,6 +110,7 @@ function App() {
             <Route path="/citizen" element={<CitizenDashboard />} />
             <Route path="/rescue" element={<RescueDashboard />} />
             <Route path="/live" element={<LiveDashboard />} />
+            <Route path="/predictions" element={<PredictionsDashboard />} />
             <Route path="/contacts" element={<ContactsDashboard />} />
             <Route path="/first-aid" element={<FirstAidDashboard />} />
             <Route path="/donate" element={<DonationDashboard />} />
