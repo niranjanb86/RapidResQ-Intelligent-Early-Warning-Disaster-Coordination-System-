@@ -6,8 +6,10 @@ import RescueDashboard from './pages/RescueDashboard';
 import LiveDashboard from './pages/LiveDashboard';
 import ContactsDashboard from './pages/ContactsDashboard';
 import FirstAidDashboard from './pages/FirstAidDashboard';
+import DonationDashboard from './pages/DonationDashboard';
 import AlertBanner from './components/AlertBanner';
-import { ShieldAlert, Users, Radio, Map as MapIcon, Phone, FileHeart } from 'lucide-react';
+import ChatBot from './components/ChatBot';
+import { ShieldAlert, Users, Radio, Map as MapIcon, Phone, FileHeart, HeartHandshake } from 'lucide-react';
 import api from './services/api';
 
 function App() {
@@ -59,6 +61,9 @@ function App() {
             <Link to="/first-aid" className="flex items-center px-6 py-3 hover:bg-slate-800 hover:text-white transition group">
               <FileHeart className="w-5 h-5 mr-3 group-hover:text-red-400" /> First Aid Hub
             </Link>
+            <Link to="/donate" className="flex items-center px-6 py-3 hover:bg-slate-800 hover:text-white transition group">
+              <HeartHandshake className="w-5 h-5 mr-3 group-hover:text-pink-400" /> Donate Funds
+            </Link>
           </div>
         </nav>
 
@@ -71,9 +76,13 @@ function App() {
             <Route path="/live" element={<LiveDashboard />} />
             <Route path="/contacts" element={<ContactsDashboard />} />
             <Route path="/first-aid" element={<FirstAidDashboard />} />
+            <Route path="/donate" element={<DonationDashboard />} />
           </Routes>
         </main>
       </div>
+      
+      {/* Global AI Chatbot */}
+      <ChatBot />
     </div>
   );
 }
