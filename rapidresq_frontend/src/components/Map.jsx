@@ -29,23 +29,23 @@ const avoidDisasters = (start, end, reports) => {
   if (reports && reports.length > 0) {
     let detourAdded = false;
     reports.forEach(r => {
-      const parts = r.location.split(',');
-      if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
-        const rLat = parseFloat(parts[0]);
-        const rLng = parseFloat(parts[1]);
-        
-        const rPoint = L.latLng(rLat, rLng);
-        const distToStart = start.distanceTo(rPoint);
-        const distToEnd = end.distanceTo(rPoint);
-        
-        // If a disaster is relatively between start and end (rough heuristic)
-        if (distToStart < start.distanceTo(end) && distToEnd < start.distanceTo(end)) {
-          // Add a detour waypoint perpendicular to the direct line
-          const detourLat = rLat + 0.05; // ~5km offset
-          const detourLng = rLng + 0.05;
-          if (!detourAdded) {
-            routeWaypoints.push(L.latLng(detourLat, detourLng));
-            detourAdded = true;
+      const coordsPart = r.location.split('|')[0];
+      const parts = coordsPart.split(',');
+      if (parts.length >= 2) {
+        const rLat = parseFloat(parts[0].trim());
+        const rLng = parseFloat(parts[1].trim());
+        if (!isNaN(rLat) && !isNaN(rLng)) {
+          const rPoint = L.latLng(rLat, rLng);
+          const distToStart = start.distanceTo(rPoint);
+          const distToEnd = end.distanceTo(rPoint);
+          
+          if (distToStart < start.distanceTo(end) && distToEnd < start.distanceTo(end)) {
+            const detourLat = rLat + 0.05;
+            const detourLng = rLng + 0.05;
+            if (!detourAdded) {
+              routeWaypoints.push(L.latLng(detourLat, detourLng));
+              detourAdded = true;
+            }
           }
         }
       }
@@ -95,9 +95,12 @@ const SafeRoutePlanner = ({ reports, routeConfig }) => {
 
 const parseLoc = (locString) => {
   if (!locString) return null;
-  const parts = locString.split(',');
-  if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
-    return [parseFloat(parts[0].trim()), parseFloat(parts[1].trim())];
+  const coordsPart = locString.split('|')[0];
+  const parts = coordsPart.split(',');
+  if (parts.length >= 2) {
+    const lat = parseFloat(parts[0].trim());
+    const lng = parseFloat(parts[1].trim());
+    if (!isNaN(lat) && !isNaN(lng)) return [lat, lng];
   }
   return null;
 }
@@ -111,11 +114,13 @@ const MapComponent = ({ data, routeConfig }) => {
       
       {data.alerts.map(a => {
         const coords = parseLoc(a.location);
+        const nParts = a.location.split('|');
+        const locName = nParts.length > 1 ? nParts[1].trim() : a.location;
         return coords ? (
           <Marker key={`al-${a.id}`} position={coords} icon={icons.alert}>
             <Popup>
               <b>ALERT: {a.title}</b><br/>
-              {a.description}<br/>Risk: {a.risk_level}
+              {a.description}<br/>Risk: {a.risk_level}<br/>Location: {locName}
             </Popup>
           </Marker>
         ) : null;
@@ -123,11 +128,13 @@ const MapComponent = ({ data, routeConfig }) => {
 
       {data.reports.map(r => {
         const coords = parseLoc(r.location);
+        const addr = r.address ? r.address : (r.location.split('|')[1] || r.location).trim();
         return coords ? (
           <Marker key={`rep-${r.id}`} position={coords} icon={icons.report}>
             <Popup>
               <b>{r.incident_type}</b><br/>
               {r.description}<br/>Reported by: {r.name}<br/>
+              Location: {addr}<br/>
               Status: {r.status}
             </Popup>
           </Marker>
@@ -136,11 +143,13 @@ const MapComponent = ({ data, routeConfig }) => {
       
       {data.volunteers.map(v => {
         const coords = parseLoc(v.location);
+        const nParts = v.location.split('|');
+        const locName = nParts.length > 1 ? nParts[1].trim() : v.location;
         return coords ? (
           <Marker key={`vol-${v.id}`} position={coords} icon={icons.volunteer}>
             <Popup>
               <b>Rescue Team: {v.name}</b><br/>
-              Phone: {v.phone}
+              Phone: {v.phone}<br/>Location: {locName}
             </Popup>
           </Marker>
         ) : null;
@@ -148,11 +157,14 @@ const MapComponent = ({ data, routeConfig }) => {
 
       {data.camps.map(c => {
         const coords = parseLoc(c.location);
+        const nParts = c.location.split('|');
+        const locName = nParts.length > 1 ? nParts[1].trim() : c.location;
         return coords ? (
           <Marker key={`cmp-${c.id}`} position={coords} icon={icons.camp}>
             <Popup>
               <b>Camp: {c.camp_name}</b><br/>
-              Boats: {c.boats_available} | Food Kits: {c.food_kits_available}
+              Boats: {c.boats_available} | Food Kits: {c.food_kits_available}<br/>
+              Location: {locName}
             </Popup>
           </Marker>
         ) : null;

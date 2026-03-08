@@ -36,8 +36,22 @@ const CitizenDashboard = () => {
   const handleLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setFormData({...formData, location: `${position.coords.latitude},${position.coords.longitude}`});
+        async (position) => {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+          let placeName = formData.address;
+          
+          try {
+            const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
+            const data = await res.json();
+            if (data && data.display_name) {
+              placeName = data.display_name;
+            }
+          } catch (e) {
+            console.error("Reverse geocoding failed", e);
+          }
+
+          setFormData({...formData, location: `${lat},${lng}`, address: placeName});
         },
         () => alert("Unable to retrieve location.")
       );

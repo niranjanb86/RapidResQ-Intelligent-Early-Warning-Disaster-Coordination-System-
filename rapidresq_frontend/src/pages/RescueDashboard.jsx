@@ -58,6 +58,56 @@ const RescueDashboard = () => {
     setCampFormData({ camp_name: '', location: '', capacity: 0, food_kits_available: 0, medical_teams: 0, boats_available: 0 });
   }
 
+  const handleVolLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+          let placeName = '';
+          try {
+            const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
+            const data = await res.json();
+            if (data && data.display_name) {
+              placeName = ` | ${data.display_name}`;
+            }
+          } catch (e) {
+            console.error("Reverse geocoding failed", e);
+          }
+          setVolFormData({...volFormData, location: `${lat},${lng}${placeName}`});
+        },
+        () => alert("Unable to retrieve location.")
+      );
+    } else {
+      alert("Geolocation is not supported by this browser.");
+    }
+  };
+
+  const handleCampLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+          let placeName = '';
+          try {
+            const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
+            const data = await res.json();
+            if (data && data.display_name) {
+              placeName = ` | ${data.display_name}`;
+            }
+          } catch (e) {
+            console.error("Reverse geocoding failed", e);
+          }
+          setCampFormData({...campFormData, location: `${lat},${lng}${placeName}`});
+        },
+        () => alert("Unable to retrieve location.")
+      );
+    } else {
+      alert("Geolocation is not supported by this browser.");
+    }
+  };
+
   if (!user || user.role !== 'volunteer') {
     return (
       <div className="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow-md text-center py-20">
@@ -80,36 +130,52 @@ const RescueDashboard = () => {
           <div>
             <h3 className="font-semibold text-gray-700 bg-gray-50 p-2 rounded mb-3">Currently Assigned ({assignedReports.length})</h3>
             <div className="space-y-3 max-h-60 overflow-y-auto">
-              {assignedReports.length === 0 ? <p className="text-sm text-gray-500">No active assignments.</p> : assignedReports.map(r => (
-                <div key={r.id} className="p-3 border rounded-lg bg-blue-50 border-blue-200">
-                  <div className="flex justify-between items-start mb-2">
-                    <span className="font-medium">{r.incident_type}</span>
-                    <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">Assigned</span>
+              {assignedReports.length === 0 ? <p className="text-sm text-gray-500">No active assignments.</p> : assignedReports.map(r => {
+                const parts = (r.location || "").split('|');
+                const rawCoords = parts[0].trim();
+                const addr = r.address ? r.address : (parts[1] ? parts[1].trim() : '');
+                const displayLoc = addr ? `${addr} (${rawCoords})` : rawCoords;
+                
+                return (
+                  <div key={r.id} className="p-3 border rounded-lg bg-blue-50 border-blue-200">
+                    <div className="flex justify-between items-start mb-2">
+                      <span className="font-medium">{r.incident_type}</span>
+                      <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">Assigned</span>
+                    </div>
+                    <div className="text-sm text-gray-600 mb-2 font-medium">📍 {displayLoc}</div>
+                    <div className="text-sm text-gray-600 mb-3 border-t border-blue-100 pt-2">Reporter: {r.name} | 📞 {r.phone}</div>
+                    <button onClick={() => handleResolve(r.id)} className="w-full text-sm bg-green-500 hover:bg-green-600 text-white py-1.5 rounded transition">
+                      Mark Resolved
+                    </button>
                   </div>
-                  <div className="text-sm text-gray-600 mb-3">{r.address} | {r.phone}</div>
-                  <button onClick={() => handleResolve(r.id)} className="w-full text-sm bg-green-500 hover:bg-green-600 text-white py-1.5 rounded transition">
-                    Mark Resolved
-                  </button>
-                </div>
-              ))}
+                )
+              })}
             </div>
           </div>
 
           <div>
             <h3 className="font-semibold text-gray-700 bg-gray-50 p-2 rounded mb-3">Pending Help ({pendingReports.length})</h3>
             <div className="space-y-3 max-h-60 overflow-y-auto">
-              {pendingReports.length === 0 ? <p className="text-sm text-gray-500">No pending rescues.</p> : pendingReports.map(r => (
-                <div key={r.id} className="p-3 border rounded-lg bg-red-50 border-red-200">
-                  <div className="flex justify-between items-start mb-2">
-                    <span className="font-medium">{r.incident_type}</span>
-                    <span className="text-xs text-red-600">{new Date(r.timestamp).toLocaleTimeString()}</span>
+              {pendingReports.length === 0 ? <p className="text-sm text-gray-500">No pending rescues.</p> : pendingReports.map(r => {
+                const parts = (r.location || "").split('|');
+                const rawCoords = parts[0].trim();
+                const addr = r.address ? r.address : (parts[1] ? parts[1].trim() : '');
+                const displayLoc = addr ? `${addr} (${rawCoords})` : rawCoords;
+
+                return (
+                  <div key={r.id} className="p-3 border rounded-lg bg-red-50 border-red-200">
+                    <div className="flex justify-between items-start mb-2">
+                      <span className="font-medium">{r.incident_type}</span>
+                      <span className="text-xs text-red-600">{new Date(r.timestamp).toLocaleTimeString()}</span>
+                    </div>
+                    <div className="text-sm text-gray-600 mb-2 font-medium">📍 {displayLoc}</div>
+                    <div className="text-sm text-gray-600 mb-3 border-t border-red-100 pt-2">Reporter: {r.name}</div>
+                    <button onClick={() => handleAttend(r.id)} className="w-full text-sm bg-red-600 hover:bg-red-700 text-white py-1.5 rounded transition">
+                      Attend to Rescue
+                    </button>
                   </div>
-                  <div className="text-sm text-gray-600 mb-3">{r.address}</div>
-                  <button onClick={() => handleAttend(r.id)} className="w-full text-sm bg-red-600 hover:bg-red-700 text-white py-1.5 rounded transition">
-                    Attend to Rescue
-                  </button>
-                </div>
-              ))}
+                )
+              })}
             </div>
           </div>
         </div>
@@ -123,7 +189,13 @@ const RescueDashboard = () => {
           <form onSubmit={handleVolSubmit} className="space-y-4">
             <div><label className="block text-sm font-medium text-gray-700">Team Name</label><input required className="mt-1 w-full border border-gray-300 p-2 rounded-md" value={volFormData.name} onChange={e=>setVolFormData({...volFormData,name:e.target.value})} /></div>
             <div><label className="block text-sm font-medium text-gray-700">Phone Number</label><input required className="mt-1 w-full border border-gray-300 p-2 rounded-md" value={volFormData.phone} onChange={e=>setVolFormData({...volFormData,phone:e.target.value})} /></div>
-            <div><label className="block text-sm font-medium text-gray-700">Location (Lat, Lng) or Area</label><input required placeholder="e.g. 9.9312, 76.2673" className="mt-1 w-full border border-gray-300 p-2 rounded-md" value={volFormData.location} onChange={e=>setVolFormData({...volFormData,location:e.target.value})} /></div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Location (Lat, Lng) or Area</label>
+              <div className="flex mt-1">
+                <input required placeholder="e.g. 9.9312, 76.2673" className="w-full border border-gray-300 p-2 rounded-l-md" value={volFormData.location} onChange={e=>setVolFormData({...volFormData,location:e.target.value})} />
+                <button type="button" onClick={handleVolLocation} className="bg-blue-600 text-white px-4 py-2 rounded-r-md hover:bg-blue-700 font-medium whitespace-nowrap">Get GPS</button>
+              </div>
+            </div>
             <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded-md font-bold hover:bg-blue-700 transition">Register Team</button>
           </form>
         </div>
@@ -133,7 +205,13 @@ const RescueDashboard = () => {
           <h2 className="text-xl font-bold mb-4 text-green-800">Register Rescue Camp / Shelter</h2>
           <form onSubmit={handleCampSubmit} className="space-y-4">
             <div><label className="block text-sm font-medium text-gray-700">Camp Name</label><input required className="mt-1 w-full border border-gray-300 p-2 rounded-md" value={campFormData.camp_name} onChange={e=>setCampFormData({...campFormData,camp_name:e.target.value})} /></div>
-            <div><label className="block text-sm font-medium text-gray-700">Location (Lat, Lng)</label><input required placeholder="e.g. 9.9312, 76.2673" className="mt-1 w-full border border-gray-300 p-2 rounded-md" value={campFormData.location} onChange={e=>setCampFormData({...campFormData,location:e.target.value})} /></div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Location (Lat, Lng)</label>
+              <div className="flex mt-1">
+                <input required placeholder="e.g. 9.9312, 76.2673" className="w-full border border-gray-300 p-2 rounded-l-md" value={campFormData.location} onChange={e=>setCampFormData({...campFormData,location:e.target.value})} />
+                <button type="button" onClick={handleCampLocation} className="bg-green-600 text-white px-4 py-2 rounded-r-md hover:bg-green-700 font-medium whitespace-nowrap">Get GPS</button>
+              </div>
+            </div>
             <div className="grid grid-cols-2 gap-4">
               <div><label className="block text-sm font-medium text-gray-700">Total Capacity</label><input required type="number" className="mt-1 w-full border border-gray-300 p-2 rounded-md" value={campFormData.capacity} onChange={e=>setCampFormData({...campFormData,capacity:e.target.value})} /></div>
               <div><label className="block text-sm font-medium text-gray-700">Food Kits Count</label><input required type="number" className="mt-1 w-full border border-gray-300 p-2 rounded-md" value={campFormData.food_kits_available} onChange={e=>setCampFormData({...campFormData,food_kits_available:e.target.value})} /></div>

@@ -11,6 +11,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import AlertBanner from './components/AlertBanner';
 import ChatBot from './components/ChatBot';
+import EmergencySOSButton from './components/EmergencySOSButton';
 import { ShieldAlert, Users, Radio, Map as MapIcon, Phone, FileHeart, HeartHandshake, LogIn, LogOut, User as UserIcon } from 'lucide-react';
 import { AuthContext } from './context/AuthContext';
 import api from './services/api';
@@ -114,6 +115,7 @@ function App() {
       
       {/* Global AI Chatbot */}
       <ChatBot />
+      <EmergencySOSButton />
     </div>
   );
 }

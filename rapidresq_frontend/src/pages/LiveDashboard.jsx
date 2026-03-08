@@ -183,50 +183,65 @@ const LiveDashboard = () => {
             {/* Camps Tab */}
             {activeTab === 'camps' && (
               data.camps.length === 0 ? <p className="text-gray-500 text-sm">No relief camps registered.</p> :
-              data.camps.map(camp => (
-                <div key={camp.id} className="p-3 border rounded-lg bg-green-50 border-green-200">
-                  <h4 className="font-bold text-green-900">{camp.camp_name}</h4>
-                  <p className="text-sm text-gray-700 mt-1"><b>Location:</b> {camp.location}</p>
-                  <div className="flex justify-between mt-2 text-sm text-green-800 font-medium">
-                    <span>Capacity: {camp.capacity}</span>
-                    <span>Boats: {camp.boats_available}</span>
-                    <span>Food Kits: {camp.food_kits_available}</span>
+              data.camps.map(camp => {
+                const parts = camp.location.split('|');
+                const locDisplay = parts.length > 1 ? `${parts[1].trim()} (${parts[0].trim()})` : camp.location;
+                return (
+                  <div key={camp.id} className="p-3 border rounded-lg bg-green-50 border-green-200">
+                    <h4 className="font-bold text-green-900">{camp.camp_name}</h4>
+                    <p className="text-sm text-gray-700 mt-1"><b>Location:</b> {locDisplay}</p>
+                    <div className="flex justify-between mt-2 text-sm text-green-800 font-medium">
+                      <span>Capacity: {camp.capacity}</span>
+                      <span>Boats: {camp.boats_available}</span>
+                      <span>Food Kits: {camp.food_kits_available}</span>
+                    </div>
                   </div>
-                </div>
-              ))
+                );
+              })
             )}
 
             {/* Alerts Tab */}
             {activeTab === 'alerts' && (
               data.alerts.length === 0 ? <p className="text-gray-500 text-sm">No active alerts.</p> :
-              data.alerts.map(alert => (
-                <div key={alert.id} className={`p-3 border rounded-lg ${
-                  alert.risk_level === 'critical' ? 'bg-red-50 border-red-200' : 
-                  alert.risk_level === 'high' ? 'bg-orange-50 border-orange-200' : 'bg-yellow-50 border-yellow-200'
-                }`}>
-                  <div className="flex justify-between items-start">
-                    <h4 className="font-bold text-gray-900">{alert.title}</h4>
-                    <span className="text-xs font-bold uppercase tracking-wider px-2 py-1 rounded bg-white shadow-sm">{alert.risk_level}</span>
+              data.alerts.map(alert => {
+                const parts = alert.location.split('|');
+                const locDisplay = parts.length > 1 ? `${parts[1].trim()} (${parts[0].trim()})` : alert.location;
+                return (
+                  <div key={alert.id} className={`p-3 border rounded-lg ${
+                    alert.risk_level === 'critical' ? 'bg-red-50 border-red-200' : 
+                    alert.risk_level === 'high' ? 'bg-orange-50 border-orange-200' : 'bg-yellow-50 border-yellow-200'
+                  }`}>
+                    <div className="flex justify-between items-start">
+                      <h4 className="font-bold text-gray-900">{alert.title}</h4>
+                      <span className="text-xs font-bold uppercase tracking-wider px-2 py-1 rounded bg-white shadow-sm">{alert.risk_level}</span>
+                    </div>
+                    <p className="text-sm text-gray-700 mt-2">{alert.description}</p>
+                    <p className="text-xs text-gray-500 mt-2">Area: {locDisplay} | Source: {alert.source}</p>
                   </div>
-                  <p className="text-sm text-gray-700 mt-2">{alert.description}</p>
-                  <p className="text-xs text-gray-500 mt-2">Area: {alert.location} | Source: {alert.source}</p>
-                </div>
-              ))
+                )
+              })
             )}
 
             {/* Reports Tab */}
             {activeTab === 'reports' && (
               data.reports.length === 0 ? <p className="text-gray-500 text-sm">No emergency reports.</p> :
-              data.reports.map(report => (
-                <div key={report.id} className="p-3 border rounded-lg bg-red-50 border-red-200">
-                  <div className="flex justify-between items-start">
-                    <h4 className="font-bold text-red-900">{report.incident_type}</h4>
-                    <span className="text-xs font-bold px-2 py-1 rounded bg-white shadow-sm text-gray-600 border">{report.status}</span>
+              data.reports.map(report => {
+                const parts = report.location.split('|');
+                const rawCoords = parts[0].trim();
+                const addr = report.address ? report.address : (parts[1] ? parts[1].trim() : '');
+                
+                return (
+                  <div key={report.id} className="p-3 border rounded-lg bg-red-50 border-red-200">
+                    <div className="flex justify-between items-start">
+                      <h4 className="font-bold text-red-900">{report.incident_type}</h4>
+                      <span className="text-xs font-bold px-2 py-1 rounded bg-white shadow-sm text-gray-600 border">{report.status}</span>
+                    </div>
+                    <p className="text-sm text-gray-700 mt-2">{report.description}</p>
+                    <p className="text-xs text-gray-500 mt-2 pb-1 border-b border-red-100">Reporter: {report.name} ({report.phone})</p>
+                    <p className="text-xs text-red-800 mt-1 font-medium">📍 {addr ? `${addr} (${rawCoords})` : rawCoords}</p>
                   </div>
-                  <p className="text-sm text-gray-700 mt-2">{report.description}</p>
-                  <p className="text-xs text-gray-500 mt-2">Reporter: {report.name} ({report.phone}) | Loc: {report.location}</p>
-                </div>
-              ))
+                )
+              })
             )}
             
           </div>
