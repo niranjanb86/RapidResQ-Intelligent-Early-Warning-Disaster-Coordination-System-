@@ -7,8 +7,14 @@ const EmergencySOSButton = () => {
   const { user } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(null);
+  const [showWarning, setShowWarning] = useState(false);
 
-  const handleSOS = () => {
+  const triggerSOS = () => {
+    setShowWarning(true);
+  };
+
+  const confirmSOS = () => {
+    setShowWarning(false);
     setLoading(true);
     setStatus(null);
 
@@ -63,6 +69,37 @@ const EmergencySOSButton = () => {
 
   return (
     <div className="fixed bottom-10 left-4 md:left-72 z-50 flex flex-col items-start gap-2">
+      {showWarning && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-[100] flex items-center justify-center p-4 backdrop-blur-sm">
+        <div className="bg-white rounded-xl shadow-2xl max-w-sm w-full p-6 transform transition-all border-t-8 border-red-600">
+          <div className="flex items-center justify-center w-16 h-16 bg-red-100 rounded-full mx-auto mb-4">
+            <AlertCircle className="w-10 h-10 text-red-600" />
+          </div>
+          <h3 className="text-xl font-black text-center text-gray-900 mb-2 uppercase tracking-wide">Emergency Warning</h3>
+          <p className="text-sm text-gray-600 text-center mb-6 font-medium">
+            This will immediately dispatch emergency services to your GPS location. <br/><br/>
+            <span className="text-red-700 font-bold bg-red-50 p-2 block border border-red-200 rounded">
+              ⚠️ False or prank SOS requests are strictly punishable by law under local jurisdiction and may result in heavy fines.
+            </span>
+          </p>
+          <div className="flex flex-col space-y-3">
+            <button 
+              onClick={confirmSOS} 
+              className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-lg shadow transition"
+            >
+              I UNDERSTAND, SEND HELP NOW
+            </button>
+            <button 
+              onClick={() => setShowWarning(false)} 
+              className="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 rounded-lg transition"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+      )}
+
       {status === 'success' && (
         <div className="bg-green-100 text-green-800 px-4 py-2 rounded-lg shadow-lg text-sm font-bold border border-green-300 animate-bounce">
           SOS Sent Successfully!
@@ -74,7 +111,7 @@ const EmergencySOSButton = () => {
         </div>
       )}
       <button
-        onClick={handleSOS}
+        onClick={triggerSOS}
         disabled={loading}
         className="relative bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-6 md:px-8 py-4 md:py-5 rounded-full shadow-[0_10px_40px_rgba(220,38,38,0.8)] border-[3px] border-red-300 flex items-center justify-center transform transition-all hover:scale-105 active:scale-95 overflow-hidden group"
         title="Tap to send Emergency SOS"
